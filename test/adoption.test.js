@@ -1,30 +1,20 @@
-// test/adoption.test.js
-// Usamos una estrategia de mock por inyección:
-// creamos un mini-app de test con handlers propios
-// para simular cada escenario sin depender de MongoDB.
-
 import { strict as assert } from "assert";
 import express from "express";
 import request from "supertest";
 
-// ─── Helper: crea una mini-app con el handler que queramos mockear ───
 function buildApp(handlers) {
   const app = express();
   app.use(express.json());
 
-  // GET /api/adoptions
   app.get("/api/adoptions", handlers.getAll);
 
-  // GET /api/adoptions/:aid
   app.get("/api/adoptions/:aid", handlers.getById);
 
-  // POST /api/adoptions/:uid/:pid
   app.post("/api/adoptions/:uid/:pid", handlers.create);
 
   return app;
 }
 
-// ─── Fakes (datos de prueba) ───
 const FAKE_ID   = "64a1f5c2b3e4d5f6a7b8c9d0";
 const FAKE_UID  = "64a1f5c2b3e4d5f6a7b8c9d1";
 const FAKE_PID  = "64a1f5c2b3e4d5f6a7b8c9d2";
@@ -32,9 +22,6 @@ const FAKE_PID  = "64a1f5c2b3e4d5f6a7b8c9d2";
 const fakeAdoption = { _id: FAKE_ID, owner: FAKE_UID, pet: FAKE_PID };
 const fakeList     = [fakeAdoption, { _id: "64a1f5c2b3e4d5f6a7b8c9d3", owner: FAKE_UID, pet: FAKE_PID }];
 
-// ─────────────────────────────────────────────────────────────
-// GET /api/adoptions
-// ─────────────────────────────────────────────────────────────
 describe("GET /api/adoptions", () => {
 
   it("debe retornar todas las adopciones con status 200", async () => {
@@ -78,9 +65,6 @@ describe("GET /api/adoptions", () => {
   });
 });
 
-// ─────────────────────────────────────────────────────────────
-// GET /api/adoptions/:aid
-// ─────────────────────────────────────────────────────────────
 describe("GET /api/adoptions/:aid", () => {
 
   it("debe retornar la adopción correcta con status 200", async () => {
@@ -124,9 +108,7 @@ describe("GET /api/adoptions/:aid", () => {
   });
 });
 
-// ─────────────────────────────────────────────────────────────
-// POST /api/adoptions/:uid/:pid
-// ─────────────────────────────────────────────────────────────
+
 describe("POST /api/adoptions/:uid/:pid", () => {
 
   it("debe crear una adopción correctamente con status 201", async () => {
